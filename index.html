@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task Manager</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #667eea, #764ba2);
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 50px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .input-box {
+      display: flex;
+      gap: 10px;
+    }
+
+    input {
+      flex: 1;
+      padding: 8px;
+    }
+
+    button {
+      padding: 8px 12px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #4caf50;
+      color: white;
+    }
+
+    button:hover {
+      opacity: 0.8;
+    }
+
+    .task {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      padding: 8px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .completed {
+      text-decoration: line-through;
+      color: gray;
+    }
+
+    .empty {
+      margin-top: 20px;
+      color: red;
+    }
+
+    .actions button {
+      margin-left: 5px;
+      background-color: #2196f3;
+    }
+
+    .delete-btn {
+      background-color: #f44336;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>📝 Task Manager</h1>
+
+  <div class="input-box">
+    <input type="text" id="taskInput" placeholder="Enter task...">
+    <button onclick="addTask()">Add</button>
+  </div>
+
+  <p id="emptyMessage" class="empty">No tasks available</p>
+
+  <div id="taskList"></div>
+</div>
+
+<script>
+  let tasks = [];
+
+  function renderTasks() {
+    const taskList = document.getElementById("taskList");
+    const emptyMessage = document.getElementById("emptyMessage");
+
+    taskList.innerHTML = "";
+
+    if (tasks.length === 0) {
+      emptyMessage.style.display = "block";
+      return;
+    } else {
+      emptyMessage.style.display = "none";
+    }
+
+    tasks.forEach((task, index) => {
+      const div = document.createElement("div");
+      div.className = "task";
+
+      const span = document.createElement("span");
+      span.innerText = task.text;
+      if (task.completed) {
+        span.classList.add("completed");
+      }
+
+      const actions = document.createElement("div");
+      actions.className = "actions";
+
+      const completeBtn = document.createElement("button");
+      completeBtn.innerText = "✔";
+      completeBtn.onclick = () => toggleTask(index);
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.innerText = "❌";
+      deleteBtn.className = "delete-btn";
+      deleteBtn.onclick = () => deleteTask(index);
+
+      actions.appendChild(completeBtn);
+      actions.appendChild(deleteBtn);
+
+      div.appendChild(span);
+      div.appendChild(actions);
+
+      taskList.appendChild(div);
+    });
+  }
+
+  function addTask() {
+    const input = document.getElementById("taskInput");
+    const text = input.value.trim();
+
+    if (text === "") return;
+
+    tasks.push({ text: text, completed: false });
+    input.value = "";
+    renderTasks();
+  }
+
+  function toggleTask(index) {
+    tasks[index].completed = !tasks[index].completed;
+    renderTasks();
+  }
+
+  function deleteTask(index) {
+    tasks.splice(index, 1);
+    renderTasks();
+  }
+
+  // Initial render
+  renderTasks();
+</script>
+
+</body>
+</html>
